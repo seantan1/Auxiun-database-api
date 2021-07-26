@@ -1,0 +1,37 @@
+{
+  "name": "axiun-database-api",
+  "version": "1.0.0",
+  "description": "Database API for freya donation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "API",
+    "resful",
+    "json",
+    "node",
+    "mongodb",
+    "express"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.6.4",
+    "mongoose-unique-validator": "^2.0.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seantan1/nodejs-mongodb-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seantan1/nodejs-mongodb-api/issues"
+  },
+  "homepage": "https://github.com/seantan1/nodejs-mongodb-api#readme",
+  "author": ""
+}
