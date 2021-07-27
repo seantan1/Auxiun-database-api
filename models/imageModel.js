@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 // Setup schema
 var imageSchema = mongoose.Schema({
-    streamer_id: {
+    user_id: {
         type: String,
         required: true
     },

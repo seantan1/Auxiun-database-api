@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 // Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://localhost/freya-donation-test', { useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/axiun-db', { useNewUrlParser: true});
 
 // Heroku Mongoose connection
 // mongoose.connect('mongodb://heroku_5686p02g:sia8l3fni4jmu7qbn0ac1t75mf@ds349857.mlab.com:49857/heroku_5686p02g', { useNewUrlParser: true });
@@ -39,11 +39,11 @@ else
 var port = process.env.PORT || 3998;
 
 // Send message for default URL
-app.get('/', (req, res) => res.send('Hello World with Express'));
+app.get('/', (req, res) => res.send('Axiun database server is up'));
 
 // Use Api routes in the App
 app.use('/api', apiRoutes);
 // Launch app to listen to specified port
 app.listen(port, function () {
-    console.log("Running FreyaDonation on port " + port);
+    console.log("Running Axiun-db-api on port " + port);
 });
