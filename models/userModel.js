@@ -11,10 +11,6 @@ var userSchema = mongoose.Schema({
     password_hash: {
         type: String,
         required: true
-    },
-    wallet_address: {
-        type: String,
-        required: true
     }
 });
 userSchema.plugin(uniqueValidator); // unique validator
