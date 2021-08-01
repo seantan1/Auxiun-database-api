@@ -27,11 +27,11 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seantan1/nodejs-mongodb-api.git"
+    "url": "git+https://github.com/seantan1/Axiun-database-api.git"
   },
+  "author": "",
   "bugs": {
-    "url": "https://github.com/seantan1/nodejs-mongodb-api/issues"
+    "url": "https://github.com/seantan1/Axiun-database-api/issues"
   },
-  "homepage": "https://github.com/seantan1/nodejs-mongodb-api#readme",
-  "author": ""
+  "homepage": "https://github.com/seantan1/Axiun-database-api#readme"
 }
