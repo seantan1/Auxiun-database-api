@@ -1,4 +1,4 @@
-// donationModel.js
+// imageModel.js
 var mongoose = require('mongoose');
 // Setup schema
 var imageSchema = mongoose.Schema({
