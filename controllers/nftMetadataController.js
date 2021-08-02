@@ -1,6 +1,7 @@
 // nftMetadataController.js
 // Import nftMetadata model
 NftMetadata = require('../models/nftMetadataModel');
+var fs = require('fs');
 
 // Handle index actions
 exports.index = function (req, res) {
