@@ -119,11 +119,7 @@ exports.fetchNftMetadata = function (req, res) {
                 });
             }
             else {
-                res.json({
-                    status: "success",
-                    message: 'NFT Metadata found',
-                    data: nftMetadata
-                });
+                res.json(nftMetadata);
             }
         })
 };
