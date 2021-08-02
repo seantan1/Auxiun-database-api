@@ -115,7 +115,7 @@ exports.fetchNftMetadata = function (req, res) {
             if (nftMetadata.length == 0) {
                 res.json({
                     status: "error",
-                    message: 'NFT Metadata not found'
+                    message: 'NFT Metadata not found for '+req.params.game_id + "_" + req.params.item_id
                 });
             }
             else {
