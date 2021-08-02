@@ -13,6 +13,8 @@ router.get('/', function (req, res) {
 var userController = require('./controllers/userController');
 // import image controller
 var imageController = require('./controllers/imageController');
+// import nftMetadata controller
+var nftMetadataController = require('./controllers/nftMetadataController');
 
 // user routes
 router.route('/users')
@@ -42,6 +44,20 @@ router.route('/images/:image_id')
 
 router.route('/images-fetchImagesByUserId')
     .post(imageController.fetchImagesByUserId);
+
+// nftMetadata routes
+router.route('/nftMetadatas')
+    .get(nftMetadataController.index)
+    .post(nftMetadataController.new);
+
+router.route('/nftMetadatas/:nftMetadata_id')
+    .get(nftMetadataController.view)
+    .patch(nftMetadataController.update)
+    .put(nftMetadataController.update)
+    .delete(nftMetadataController.delete);
+
+router.route('/nft/:game_id/:item_id')
+    .get(nftMetadataController.fetchNftMetadata);
 
 // Export API routes
 module.exports = router;

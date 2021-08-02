@@ -47,7 +47,7 @@ exports.new = function (req, res) {
 // Handle view user info
 exports.view = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.findById(req.params.user, function (err, user) {
+        User.findById(req.params.user_id, function (err, user) {
             if (err)
                 res.send(err);
             res.json({
@@ -63,7 +63,7 @@ exports.view = function (req, res) {
 // Handle update user info
 exports.update = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.findById(req.params.user, function (err, user) {
+        User.findById(req.params.user_id, function (err, user) {
             if (err)
                 res.send(err);
             user.email = req.body.email ? req.body.email : user.email;

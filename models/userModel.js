@@ -1,4 +1,4 @@
-// donationModel.js
+// userModel.js
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator'); // unique validator
 // Setup schema
