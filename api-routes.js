@@ -1,6 +1,23 @@
 // api-routes.js
 // Initialize express router
 let router = require('express').Router();
+// multer for upload image files
+var multer = require('multer');
+
+// function to upload image files
+var multer = require('multer');
+ 
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+ 
+var upload = multer({ storage: storage });
+
 // Set default API response
 router.get('/', function (req, res) {
     res.json({
@@ -48,7 +65,7 @@ router.route('/images-fetchImagesByUserId')
 // nftMetadata routes
 router.route('/nftMetadatas')
     .get(nftMetadataController.index)
-    .post(nftMetadataController.new);
+    .post(upload.single('item_image'), nftMetadataController.new);
 
 router.route('/nftMetadatas/:nftMetadata_id')
     .get(nftMetadataController.view)

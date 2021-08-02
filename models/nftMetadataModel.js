@@ -26,9 +26,9 @@ var nftMetadataSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    item_image_link: {
-        type: String,
-        required: true
+    item_image: {
+        data: Buffer,
+        contentType: String
     }
 });
 nftMetadataSchema.plugin(uniqueValidator); // unique validator

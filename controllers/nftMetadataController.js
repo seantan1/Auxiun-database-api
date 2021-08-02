@@ -1,6 +1,9 @@
 // nftMetadataController.js
 // Import nftMetadata model
 NftMetadata = require('../models/nftMetadataModel');
+var fs = require('fs');
+var path = require('path');
+
 // Handle index actions
 exports.index = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -31,7 +34,10 @@ exports.new = function (req, res) {
         nftMetadata.item_id = req.body.item_id;
         nftMetadata.item_name = req.body.item_name;
         nftMetadata.item_description = req.body.item_description;
-        nftMetadata.item_image_link = req.body.item_image_link;
+        nftMetadata.item_image = {
+            data: fs.readFileSync(path.join(__dirname + '/../uploads/' + req.file.filename)),
+            contentType: 'image/png'
+        }
         // save the nftMetadata and check for errors
         nftMetadata.save(function (err) {
             // Check for validation error
@@ -70,7 +76,7 @@ exports.update = function (req, res) {
             nftMetadata.item_id = req.body.item_id;
             nftMetadata.item_name = req.body.item_name;
             nftMetadata.item_description = req.body.item_description;
-            nftMetadata.item_image_link = req.body.item_image_link;
+            nftMetadata.item_image = req.file.path;
             // save the nftMetadata and check for errors
             nftMetadata.save(function (err) {
                 if (err)
