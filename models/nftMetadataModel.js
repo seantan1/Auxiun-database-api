@@ -26,7 +26,7 @@ var nftMetadataSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    item_image_link: {
+    item_image: {
         type: String,
         required: true
     }
