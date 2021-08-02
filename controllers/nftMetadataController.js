@@ -2,19 +2,6 @@
 // Import nftMetadata model
 NftMetadata = require('../models/nftMetadataModel');
 
-var multer = require('multer');
- 
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-});
- 
-var upload = multer({ storage: storage });
-
 // Handle index actions
 exports.index = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -45,7 +32,10 @@ exports.new = function (req, res) {
         nftMetadata.item_id = req.body.item_id;
         nftMetadata.item_name = req.body.item_name;
         nftMetadata.item_description = req.body.item_description;
-        nftMetadata.item_image = req.file.path;
+        nftMetadata.item_image = {
+            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+            contentType: 'image/png'
+        }
         // save the nftMetadata and check for errors
         nftMetadata.save(function (err) {
             // Check for validation error

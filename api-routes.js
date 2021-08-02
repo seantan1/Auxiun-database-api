@@ -5,36 +5,18 @@ let router = require('express').Router();
 var multer = require('multer');
 
 // function to upload image files
-const destination = (req, file, cb) => {
-    switch (file.mimetype) {
-        case 'image/jpeg':
-            cb(null, './images/');
-            break;
-        case 'image/png':
-            cb(null, './images/');
-            break;
-        default:
-            cb('invalid file');
-            break;
-    }
-}
-
-const storage = multer.diskStorage({
-    destination: destination,
+var multer = require('multer');
+ 
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
     filename: (req, file, cb) => {
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+        cb(null, file.fieldname + '-' + Date.now())
     }
 });
-
+ 
 var upload = multer({ storage: storage });
-
-const uploadNFTMetadataImageFile = (req, res, next) => {
-    upload.fields([{ name: 'item_image', maxCount: 1 }])(req, res, (err) => {
-        console.log(req.files);
-        req.body.item_image = req.files.item_image[0].path.replace('/\\/g', '/');
-        next()
-    })
-}
 
 // Set default API response
 router.get('/', function (req, res) {
@@ -83,7 +65,7 @@ router.route('/images-fetchImagesByUserId')
 // nftMetadata routes
 router.route('/nftMetadatas')
     .get(nftMetadataController.index)
-    .post(uploadNFTMetadataImageFile, nftMetadataController.new);
+    .post(upload.single('uploads'), nftMetadataController.new);
 
 router.route('/nftMetadatas/:nftMetadata_id')
     .get(nftMetadataController.view)
