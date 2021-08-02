@@ -65,7 +65,7 @@ router.route('/images-fetchImagesByUserId')
 // nftMetadata routes
 router.route('/nftMetadatas')
     .get(nftMetadataController.index)
-    .post(upload.single('uploads'), nftMetadataController.new);
+    .post(upload.single('item_image'), nftMetadataController.new);
 
 router.route('/nftMetadatas/:nftMetadata_id')
     .get(nftMetadataController.view)
