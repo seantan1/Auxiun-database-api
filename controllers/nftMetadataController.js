@@ -107,7 +107,7 @@ exports.delete = function (req, res) {
 
 // Handle fetchNftMetadata function
 exports.fetchNftMetadata = function (req, res) {
-    User.find()
+    NftMetadata.find()
         .where('game_id_item_id_pair').equals(req.params.game_id + "_" + req.params.item_id)
         .exec(function (err, nftMetadata) {
             if (err)
