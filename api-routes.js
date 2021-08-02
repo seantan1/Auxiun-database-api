@@ -5,10 +5,24 @@ let router = require('express').Router();
 var multer = require('multer');
 
 // function to upload image files
+const destination = (req, file, cb) => {
+    switch (file.mimetype) {
+        case 'image/jpeg':
+            cb(null, './images/');
+            break;
+        case 'image/png':
+            cb(null, './images/');
+            break;
+        default:
+            cb('invalid file');
+            break;
+    }
+}
+
 const storage = multer.diskStorage({
     destination: destination,
     filename: (req, file, cb) => {
-         return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
     }
 });
 
