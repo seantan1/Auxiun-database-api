@@ -27,6 +27,8 @@ exports.new = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         var user = new User();
         user.email = req.body.email ? req.body.email : user.email;
+        user.firstname = req.body.firstname;
+        user.lastname = req.body.lastname;
         user.password_hash = req.body.password_hash;
         // save the user and check for errors
         user.save(function (err) {
@@ -67,6 +69,8 @@ exports.update = function (req, res) {
             if (err)
                 res.send(err);
             user.email = req.body.email ? req.body.email : user.email;
+            user.firstname = req.body.firstname;
+            user.lastname = req.body.lastname;
             user.password_hash = req.body.password_hash;
             // save the user and check for errors
             user.save(function (err) {
