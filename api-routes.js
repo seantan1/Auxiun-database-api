@@ -30,6 +30,8 @@ router.get('/', function (req, res) {
 var userController = require('./controllers/userController');
 // import image controller
 var imageController = require('./controllers/imageController');
+// import game controller
+var gameController = require('./controllers/gameController');
 // import nftMetadata controller
 var nftMetadataController = require('./controllers/nftMetadataController');
 
