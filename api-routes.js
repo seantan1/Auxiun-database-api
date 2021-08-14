@@ -62,17 +62,6 @@ router.route('/images/:image_id')
 router.route('/images-fetchImagesByUserId')
     .post(imageController.fetchImagesByUserId);
 
-// game routes
-router.route('/games')
-    .get(imageController.index)
-    .post(imageController.new);
-
-router.route('/games/:game_id')
-    .get(gameController.view)
-    .patch(gameController.update)
-    .put(gameController.update)
-    .delete(gameController.delete);
-
 // nftMetadata routes
 router.route('/nftMetadatas')
     .get(nftMetadataController.index)
