@@ -66,8 +66,8 @@ router.route('/images-fetchImagesByUserId')
 
 // game routes
 router.route('/games')
-    .get(imageController.index)
-    .post(imageController.new);
+    .get(gameController.index)
+    .post(gameController.new);
 
 router.route('/games/:game_id')
     .get(gameController.view)
