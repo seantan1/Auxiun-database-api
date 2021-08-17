@@ -3,24 +3,19 @@
 Game = require('../models/gameModel');
 // Handle index actions
 exports.index = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        Game.get(function (err, games) {
-            if (err) {
-                res.json({
-                    status: "error",
-                    message: err,
-                });
-            }
+    Game.get(function (err, games) {
+        if (err) {
             res.json({
-                status: "success",
-                message: "Games retrieved successfully",
-                data: games
+                status: "error",
+                message: err,
             });
+        }
+        res.json({
+            status: "success",
+            message: "Games retrieved successfully",
+            data: games
         });
-    }
-    else {
-        res.json('Not authorised');
-    }
+    });
 };
 // Handle create game actions
 exports.new = function (req, res) {
