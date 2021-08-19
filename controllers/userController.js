@@ -83,6 +83,29 @@ exports.update = function (req, res) {
         res.json('Not authorised');
     }
 };
+
+exports.updatePassword = (req, res) => {
+    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
+        User.findById(req.params.user_id, (err, user) => {
+            if (err)
+                res.send(err);
+            if(user.password_hash != req.body.old_password_hash) {
+                res.send(err);
+            }
+            user.email = req.body.email ? req.body.email : user.email;
+            user.password_hash = req.body.new_password_hash;
+            user.save(function (err) {
+                if (err)
+                    res.json(err);
+                res.json({
+                    message: 'User Info updated',
+                    data: user
+                });
+            });
+        });
+    }
+}
+
 // Handle delete donation
 exports.delete = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -128,3 +151,4 @@ exports.login = function (req, res) {
         res.json('Not authorised');
     }
 };
+
