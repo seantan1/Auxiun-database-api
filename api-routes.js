@@ -44,6 +44,9 @@ router.route('/users/:user_id')
     .put(userController.update)
     .delete(userController.delete);
 
+router.route('/users/update-password/:user_id')
+    .post(userController.updatePassword)
+
 // streamer login
 router.route('/user-login')
     .post(userController.login);
