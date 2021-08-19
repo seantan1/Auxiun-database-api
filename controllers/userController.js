@@ -2,6 +2,7 @@
 
 // For hashed passwords
 const bcrypt = require("bcryptjs")
+const saltRounds = 10
 // Import user model
 User = require('../models/userModel');
 // Handle index actions
@@ -27,20 +28,20 @@ exports.index = function (req, res) {
 };
 
 // Handle create user actions
-exports.new = function (req, res) {
+exports.new = async (req, res) => {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         var user = new User();
         user.email = req.body.email ? req.body.email : user.email;
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
-        user.password_hash = req.body.password_hash;
+        user.password_hash = await bcrypt.hash(req.body.password_hash, saltRounds)
         // save the user and check for errors
         user.save(function (err) {
             // Check for validation error
             if (err)
-                res.json(err);
+                return res.json(err);
             else
-                res.json({
+                return res.json({
                     message: 'New user created!',
                     data: user
                 });
@@ -118,13 +119,16 @@ exports.login = async (req, res) => {
         const user = await User.findOne({email: req.body.email})
         // Compare passwords
         if(!user){
-            return res.json({message: "No user found"})
+            return res.json({message: "fail",
+                            info: "No user found"})
         }
         const passwordMatch = await bcrypt.compare(req.body.password_hash, user.password_hash)
         if(passwordMatch){
-            return res.json({message: "Login successful"})
+            return res.json({message: "success",
+                            data: user})
         } else {
-            return res.json({message: "Login failed"})
+            return res.json({message: "fail",
+                            info: "Passwords did not match"})
         }
     }
     else {
@@ -138,13 +142,13 @@ exports.updatePassword = async (req, res) => {
         // Compare passwords
         const passwordMatch = await bcrypt.compare(req.body.old_password, user.password_hash)
         if(passwordMatch){
-            const salt = 10
-            const newPasswordHash = await bcrypt.hash(req.body.new_password, salt)
+            const newPasswordHash = await bcrypt.hash(req.body.new_password, saltRounds)
             const result = await user.update({password_hash: newPasswordHash})
-            return res.json({message: "Password successfully updated",
+            return res.json({ status: "success",
                             data: result})
         } else {
             return res.json({
+                status: 'fail',
                 message: 'Old password does not match existing password'
             });
         }

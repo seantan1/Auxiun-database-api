@@ -26,25 +26,6 @@ var userSchema = mongoose.Schema({
     }
 });
 
-// Before saving, hash the password
-userSchema.pre('save', (next) => {
-    var user = this;
-    if(user.isModified("password_hash")) {
-        bcrypt.getSalt(saltRounds, (err, salt) => {
-            if(err){
-                return next(err)
-            }
-            bcrypt.hash(user.password_hash, salt, (err, hash) => {
-                if(err){
-                    return next(err)
-                }
-                user.password_hash = hash
-            })
-        })
-    } else {
-        next()
-    }
-})
 
 userSchema.plugin(uniqueValidator); // unique validator
 // Export User model
