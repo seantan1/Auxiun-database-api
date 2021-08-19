@@ -119,16 +119,16 @@ exports.login = async (req, res) => {
         const user = await User.findOne({email: req.body.email})
         // Compare passwords
         if(!user){
-            return res.json({message: "fail",
-                            info: "No user found"})
+            return res.json({status: "fail",
+                            message: "No user found"})
         }
         const passwordMatch = await bcrypt.compare(req.body.password_hash, user.password_hash)
         if(passwordMatch){
-            return res.json({message: "success",
+            return res.json({status: "success",
                             data: user})
         } else {
-            return res.json({message: "fail",
-                            info: "Passwords did not match"})
+            return res.json({status: "fail",
+                            message: "Passwords did not match"})
         }
     }
     else {
