@@ -94,6 +94,6 @@ router.route('/nft/:game_id/:item_id')
 
 
 router.route('/purchase/:tokenId')
-    .post(transactionController.new);
+    // .post(transactionController.new);
 // Export API routes
 module.exports = router;
