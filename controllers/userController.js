@@ -22,6 +22,7 @@ exports.index = function (req, res) {
         res.json('Not authorised');
     }
 };
+
 // Handle create user actions
 exports.new = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -62,6 +63,7 @@ exports.view = function (req, res) {
         res.json('Not authorised');
     }
 };
+
 // Handle update user info
 exports.update = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -88,7 +90,7 @@ exports.update = function (req, res) {
     }
 };
 
-exports.updatePassword = (req, res) => {
+exports.updatePassword = function(req, res) {
     if(req.body.apikey == process.env.PRIVATE_API_KEY) {
         User.findById(req.params.user_id, (err, user) => {
             if (err)
@@ -96,9 +98,7 @@ exports.updatePassword = (req, res) => {
             if(user.password_hash != req.body.old_password_hash) {
                 res.send(err);
             }
-            user.email = req.body.email ? req.body.email : user.email;
-            user.password_hash = req.body.new_password_hash;
-            user.save(function (err) {
+            user.update({password_hash: req.body.new_password_hash}, (err) => {
                 if (err)
                     res.json(err);
                 res.json({

@@ -47,7 +47,7 @@ router.route('/users/:user_id')
     .delete(userController.delete);
 
 router.route('/users/update-password/:user_id')
-    .post(userController.updatePassword)
+    .patch(userController.updatePassword)
 
 // streamer login
 router.route('/user-login')
