@@ -1,6 +1,10 @@
 // userModel.js
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator'); // unique validator
+
+// For hashing passwords
+const saltRounds = 10
+
 // Setup schema
 var userSchema = mongoose.Schema({
     email: {
@@ -21,6 +25,8 @@ var userSchema = mongoose.Schema({
         required: true
     }
 });
+
+
 userSchema.plugin(uniqueValidator); // unique validator
 // Export User model
 var User = module.exports = mongoose.model('user', userSchema);

@@ -44,6 +44,7 @@ exports.new = function (req, res) {
         res.json('Not authorised');
     }
 };
+
 // Handle view donation info
 exports.view = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {

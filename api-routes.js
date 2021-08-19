@@ -46,6 +46,9 @@ router.route('/users/:user_id')
     .put(userController.update)
     .delete(userController.delete);
 
+router.route('/users/update-password/:user_id')
+    .patch(userController.updatePassword)
+
 // streamer login
 router.route('/user-login')
     .post(userController.login);
@@ -89,5 +92,8 @@ router.route('/nftMetadatas/:nftMetadata_id')
 router.route('/nft/:game_id/:item_id')
     .get(nftMetadataController.fetchNftMetadata);
 
+
+router.route('/purchase/:tokenId')
+    // .post(transactionController.new);
 // Export API routes
 module.exports = router;

@@ -1,4 +1,8 @@
 // userController.js
+
+// For hashed passwords
+const bcrypt = require("bcryptjs")
+const saltRounds = 10
 // Import user model
 User = require('../models/userModel');
 // Handle index actions
@@ -22,21 +26,22 @@ exports.index = function (req, res) {
         res.json('Not authorised');
     }
 };
+
 // Handle create user actions
-exports.new = function (req, res) {
+exports.new = async (req, res) => {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         var user = new User();
         user.email = req.body.email ? req.body.email : user.email;
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
-        user.password_hash = req.body.password_hash;
+        user.password_hash = await bcrypt.hash(req.body.password_hash, saltRounds)
         // save the user and check for errors
         user.save(function (err) {
             // Check for validation error
             if (err)
-                res.json(err);
+                return res.json(err);
             else
-                res.json({
+                return res.json({
                     message: 'New user created!',
                     data: user
                 });
@@ -46,6 +51,7 @@ exports.new = function (req, res) {
         res.json('Not authorised');
     }
 };
+
 // Handle view user info
 exports.view = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -62,6 +68,7 @@ exports.view = function (req, res) {
         res.json('Not authorised');
     }
 };
+
 // Handle update user info
 exports.update = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -82,11 +89,12 @@ exports.update = function (req, res) {
                 });
             });
         });
-    }
-    else {
+    } else {
         res.json('Not authorised');
     }
 };
+
+
 // Handle delete donation
 exports.delete = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -106,29 +114,47 @@ exports.delete = function (req, res) {
     }
 };
 
-// Handle login function
-exports.login = function (req, res) {
+exports.login = async (req, res) => {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.find()
-            .where('email').equals(req.body.email)
-            .where('password_hash').equals(req.body.password_hash)
-            .exec(function (err, user) {
-                if (err)
-                    res.send(err);
-                if (user.length == 0) {
-                    res.json({
-                        message: 'fail'
-                    });
-                }
-                else {
-                    res.json({
-                        message: 'success',
-                        data: user
-                    });
-                }
-            })
+        const user = await User.findOne({email: req.body.email})
+        // Compare passwords
+        if(!user){
+            return res.json({status: "fail",
+                            message: "No user found"})
+        }
+        const passwordMatch = await bcrypt.compare(req.body.password_hash, user.password_hash)
+        if(passwordMatch){
+            return res.json({status: "success",
+                            data: user})
+        } else {
+            return res.json({status: "fail",
+                            message: "Passwords did not match"})
+        }
     }
     else {
         res.json('Not authorised');
     }
 };
+
+exports.updatePassword = async (req, res) => {
+    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
+        const user = await User.findById(req.params.user_id)
+        // Compare passwords
+        const passwordMatch = await bcrypt.compare(req.body.old_password, user.password_hash)
+        if(passwordMatch){
+            const newPasswordHash = await bcrypt.hash(req.body.new_password, saltRounds)
+            const result = await user.update({password_hash: newPasswordHash})
+            return res.json({ status: "success",
+                            data: result})
+        } else {
+            return res.json({
+                status: 'fail',
+                message: 'Old password does not match existing password'
+            });
+        }
+    } else {
+        return res.json('Not authorised');
+    }
+}
+
+
