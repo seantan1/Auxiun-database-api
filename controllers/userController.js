@@ -50,6 +50,7 @@ exports.new = function (req, res) {
         res.json('Not authorised');
     }
 };
+
 // Handle view user info
 exports.view = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -93,8 +94,6 @@ exports.update = function (req, res) {
 };
 
 
-
-
 // Handle delete donation
 exports.delete = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
@@ -114,145 +113,44 @@ exports.delete = function (req, res) {
     }
 };
 
-// Handle login function
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.find()
-            .where('email').equals(req.body.email)
-            .exec(function (err, user) {
-                if (err){
-                    return res.send(err);
-                }
-                if (user.length == 0) {
-                    return res.json({
-                        message: 'No user found with this email'
-                    });
-                    
-                }
-                // Compare passwords
-                bcrypt.compare(req.body.password_hash, user.password_hash, (err, result) => {
-                   
-                    if (!result || err){
-                        return res.json({
-                            message: 'Incorrect password'
-                        })
-                        
-                    }
-                    else {
-                        return res.json({
-                            message: 'Success',
-                            data: user
-                        });
-                        
-                    }
-                });
-            })
+        const user = await User.findOne({email: req.body.email})
+        // Compare passwords
+        if(!user){
+            return res.json({message: "No user found"})
+        }
+        const passwordMatch = await bcrypt.compare(req.body.password_hash, user.password_hash)
+        if(passwordMatch){
+            return res.json({message: "Login successful"})
+        } else {
+            return res.json({message: "Login failed"})
+        }
     }
     else {
         res.json('Not authorised');
     }
 };
 
-exports.updatePassword = function (req, res) {
+exports.updatePassword = async (req, res) => {
     if(req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.findById(req.params.user_id, (err, user) => {
-            if (err){
-                return res.json("Error: User not found");
-            }
-            // Compare passwords
-            bcrypt.compare(res.body.old_password, user.password_hash, (err, result) => {
-                if(err){
-                    return res.send(err)
-                    
-                }
-                if(!result){
-                    return res.json("Old password did not match")
-                } else {
-                    user.update({password_hash: req.body.new_password}, (err) => {
-                        if (err) {
-                            return res.send(err)
-                        }
-                        return res.json({
-                            message: 'User Password Updated'
-                        });
-                    });
-                }
-            })
-        });
+        const user = await User.findById(req.params.user_id)
+        // Compare passwords
+        const passwordMatch = await bcrypt.compare(req.body.old_password, user.password_hash)
+        if(passwordMatch){
+            const salt = 10
+            const newPasswordHash = await bcrypt.hash(req.body.new_password, salt)
+            const result = await user.update({password_hash: newPasswordHash})
+            return res.json({message: "Password successfully updated",
+                            data: result})
+        } else {
+            return res.json({
+                message: 'Old password does not match existing password'
+            });
+        }
     } else {
         return res.json('Not authorised');
     }
 }
 
-/**
- * exports.login = (req, res) => {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.find()
-            .where('email').equals(req.body.email)
-            .exec(function (err, user) {
-                if (err){
-                    return res.send(err);
-                }
-                if (user.length == 0) {
-                    return res.json({
-                        message: 'No user found with this email'
-                    });
-                    
-                }
-                // Compare passwords
-                bcrypt.compare(req.body.password_hash, user.password_hash, (err, result) => {
-                   
-                    if (!result || err){
-                        return res.json({
-                            message: 'Incorrect password'
-                        })
-                        
-                    }
-                    else {
-                        return res.json({
-                            message: 'Success',
-                            data: user
-                        });
-                        
-                    }
-                });
-            })
-    }
-    else {
-        res.json('Not authorised');
-    }
-};
-
-exports.updatePassword = function (req, res) {
-    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.findById(req.params.user_id, (err, user) => {
-            if (err){
-                return res.json("Error: User not found");
-            }
-            // Compare passwords
-            bcrypt.compare(res.body.old_password, user.password_hash, (err, result) => {
-                if(err){
-                    return res.send(err)
-                    
-                }
-                if(!result){
-                    return res.json("Old password did not match")
-                } else {
-                    user.update({password_hash: req.body.new_password}, (err) => {
-                        if (err) {
-                            return res.send(err)
-                        }
-                        return res.json({
-                            message: 'User Password Updated'
-                        });
-                    });
-                }
-            })
-        });
-    } else {
-        return res.json('Not authorised');
-    }
-}
-
- */
 

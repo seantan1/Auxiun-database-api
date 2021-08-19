@@ -1,6 +1,10 @@
 // userModel.js
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator'); // unique validator
+
+// For hashing passwords
+const saltRounds = 10
+
 // Setup schema
 var userSchema = mongoose.Schema({
     email: {
@@ -22,27 +26,26 @@ var userSchema = mongoose.Schema({
     }
 });
 
-
 // Before saving, hash the password
-// userSchema.pre('save', (next) => {
-//     var user = this;
-//     if(user.isModified("password_hash")) {
-//         bcrypt.getSalt(saltRounds, (err, salt) => {
-//             if(err){
-//                 return next(err)
-//             }
-//             bcrypt.hash(user.password_hash, salt, (err, hash) => {
-//                 if(err){
-//                     return next(err)
-//                 }
-//                 user.password_hash = hash
-//             })
-//         })
-//     } else {
-//         next()
-//     }
-  
-// })
+userSchema.pre('save', (next) => {
+    var user = this;
+    if(user.isModified("password_hash")) {
+        bcrypt.getSalt(saltRounds, (err, salt) => {
+            if(err){
+                return next(err)
+            }
+            bcrypt.hash(user.password_hash, salt, (err, hash) => {
+                if(err){
+                    return next(err)
+                }
+                user.password_hash = hash
+            })
+        })
+    } else {
+        next()
+    }
+})
+
 userSchema.plugin(uniqueValidator); // unique validator
 // Export User model
 var User = module.exports = mongoose.model('user', userSchema);
