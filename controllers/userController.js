@@ -1,4 +1,7 @@
 // userController.js
+
+// For hashed passwords
+const bcrypt = require("bcryptjs")
 // Import user model
 User = require('../models/userModel');
 // Handle index actions
@@ -89,30 +92,8 @@ exports.update = function (req, res) {
     }
 };
 
-exports.updatePassword = function (req, res) {
-    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
-        User.findById(req.params.user_id, (err, user) => {
-            if (err){
-                res.json("Error: User not found");
-                return
-            }
-            if(user.password_hash != req.body.old_password_hash) {
-                res.json("Error: Old password did not match");
-                return
-            }
-            user.update({password_hash: req.body.new_password_hash}, (err) => {
-                if (err) {
-                    res.send(err)
-                }
-                res.json({
-                    message: 'User Password Updated'
-                });
-            });
-        });
-    } else {
-        res.json('Not authorised');
-    }
-}
+
+
 
 // Handle delete donation
 exports.delete = function (req, res) {
@@ -134,29 +115,144 @@ exports.delete = function (req, res) {
 };
 
 // Handle login function
-exports.login = function (req, res) {
+exports.login = (req, res) => {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         User.find()
             .where('email').equals(req.body.email)
-            .where('password_hash').equals(req.body.password_hash)
             .exec(function (err, user) {
-                if (err)
-                    res.send(err);
+                if (err){
+                    return res.send(err);
+                }
                 if (user.length == 0) {
-                    res.json({
-                        message: 'fail'
+                    return res.json({
+                        message: 'No user found with this email'
                     });
+                    
                 }
-                else {
-                    res.json({
-                        message: 'success',
-                        data: user
-                    });
-                }
+                // Compare passwords
+                bcrypt.compare(req.body.password_hash, user.password_hash, (err, result) => {
+                   
+                    if (!result || err){
+                        return res.json({
+                            message: 'Incorrect password'
+                        })
+                        
+                    }
+                    else {
+                        return res.json({
+                            message: 'Success',
+                            data: user
+                        });
+                        
+                    }
+                });
             })
     }
     else {
         res.json('Not authorised');
     }
 };
+
+exports.updatePassword = function (req, res) {
+    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
+        User.findById(req.params.user_id, (err, user) => {
+            if (err){
+                return res.json("Error: User not found");
+            }
+            // Compare passwords
+            bcrypt.compare(res.body.old_password, user.password_hash, (err, result) => {
+                if(err){
+                    return res.send(err)
+                    
+                }
+                if(!result){
+                    return res.json("Old password did not match")
+                } else {
+                    user.update({password_hash: req.body.new_password}, (err) => {
+                        if (err) {
+                            return res.send(err)
+                        }
+                        return res.json({
+                            message: 'User Password Updated'
+                        });
+                    });
+                }
+            })
+        });
+    } else {
+        return res.json('Not authorised');
+    }
+}
+
+/**
+ * exports.login = (req, res) => {
+    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+        User.find()
+            .where('email').equals(req.body.email)
+            .exec(function (err, user) {
+                if (err){
+                    return res.send(err);
+                }
+                if (user.length == 0) {
+                    return res.json({
+                        message: 'No user found with this email'
+                    });
+                    
+                }
+                // Compare passwords
+                bcrypt.compare(req.body.password_hash, user.password_hash, (err, result) => {
+                   
+                    if (!result || err){
+                        return res.json({
+                            message: 'Incorrect password'
+                        })
+                        
+                    }
+                    else {
+                        return res.json({
+                            message: 'Success',
+                            data: user
+                        });
+                        
+                    }
+                });
+            })
+    }
+    else {
+        res.json('Not authorised');
+    }
+};
+
+exports.updatePassword = function (req, res) {
+    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
+        User.findById(req.params.user_id, (err, user) => {
+            if (err){
+                return res.json("Error: User not found");
+            }
+            // Compare passwords
+            bcrypt.compare(res.body.old_password, user.password_hash, (err, result) => {
+                if(err){
+                    return res.send(err)
+                    
+                }
+                if(!result){
+                    return res.json("Old password did not match")
+                } else {
+                    user.update({password_hash: req.body.new_password}, (err) => {
+                        if (err) {
+                            return res.send(err)
+                        }
+                        return res.json({
+                            message: 'User Password Updated'
+                        });
+                    });
+                }
+            })
+        });
+    } else {
+        return res.json('Not authorised');
+    }
+}
+
+ */
 
