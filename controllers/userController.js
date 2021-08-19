@@ -92,28 +92,25 @@ exports.update = function (req, res) {
 exports.updatePassword = function (req, res) {
     if(req.body.apikey == process.env.PRIVATE_API_KEY) {
         User.findById(req.params.user_id, (err, user) => {
-            if (err)
-                res.json("Error: Could not find user by id");
+            if (err){
+                res.json("Error: User not found");
+                return
+            }
             if(user.password_hash != req.body.old_password_hash) {
                 res.json("Error: Old password did not match");
+                return
             }
-            // user.update({password_hash: req.body.new_password_hash}, (err) => {
-            //     if (err)
-            //         res.json("Error: Password not updated");
-            //     res.json({
-            //         message: 'User Password Updated',
-            //         data: user
-            //     });
-            // });
-        });
-        User.findByIdAndUpdate(req.params.user_id, {password_hash: req.body.new_password_hash}, {}, (err) => {
-            if (err)
-                res.json("Error: Password not updated");
-            res.json({
-                message: 'User Password Updated',
-                data: user
+            user.update({password_hash: req.body.new_password_hash}, (err) => {
+                if (err) {
+                    res.send(err)
+                }
+                res.json({
+                    message: 'User Password Updated'
+                });
             });
         });
+    } else {
+        res.json('Not authorised');
     }
 }
 
