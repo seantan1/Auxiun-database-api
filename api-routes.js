@@ -92,6 +92,8 @@ router.route('/nftMetadatas/:nftMetadata_id')
 router.route('/nft/:game_id/:item_id')
     .get(nftMetadataController.fetchNftMetadata);
 
+router.route('nftMetadatas-fetchByGameId')
+    .get(nftMetadataController.fetchNFTMetadatasByGameId);
 
 router.route('/purchase/:tokenId')
     // .post(transactionController.new);
