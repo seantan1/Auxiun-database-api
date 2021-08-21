@@ -129,3 +129,22 @@ exports.fetchNftMetadata = function (req, res) {
             }
         })
 };
+
+// Handle fetchNFTMetadatasByGameId
+exports.fetchNFTMetadatasByGameId = function (req, res) {
+    NftMetadata.find()
+        .where('game_id').equals(req.params.game_id)
+        .exec(function (err, nftMetadata) {
+            if (err)
+                res.send(err);
+            if (nftMetadata.length == 0) {
+                res.json({
+                    status: "error",
+                    message: 'NFT Metadatas not found for game ID: '+ req.params.game_id
+                });
+            }
+            else {
+                res.json(nftMetadata);
+            }
+        })
+};
