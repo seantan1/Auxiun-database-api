@@ -78,17 +78,16 @@ exports.update =  function (req, res) {
                 res.send(err);
             
             // Here we're using passwords for auth
-            bcrypt.compare(req.body.password_hash, user.password_hash, (error, response) => {
+            bcrypt.compare(req.body.password_hash, user.password_hash, (error, isMatch) => {
                 if (error){
                     // Send errors if there is any
-                    response.send(error);
+                    res.send(error);
                 }
-                if (response) {
+                if (isMatch) {
                    // save the user and check for errors
                     user.email = req.body.email ? req.body.email : user.email;
                     user.firstname = req.body.firstname;
                     user.lastname = req.body.lastname;
-                    user.password_hash = req.body.password_hash
                     user.save(function (err) {
                         if (err)
                             res.json(err);
@@ -100,7 +99,7 @@ exports.update =  function (req, res) {
                     });
                 } else {
                   // response is OutgoingMessage object that server response http request
-                  return response.json({success: false, message: 'Passwords do not match'});
+                  return res.json({success: false, message: 'Passwords do not match'});
                 }
             });     
         });
