@@ -70,24 +70,38 @@ exports.view = function (req, res) {
 };
 
 // Handle update user info
-exports.update = function (req, res) {
+// This function does not update the password for a user.
+exports.update =  function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         User.findById(req.params.user_id, function (err, user) {
             if (err)
                 res.send(err);
-            user.email = req.body.email ? req.body.email : user.email;
-            user.firstname = req.body.firstname;
-            user.lastname = req.body.lastname;
-            user.password_hash = req.body.password_hash;
-            // save the user and check for errors
-            user.save(function (err) {
-                if (err)
-                    res.json(err);
-                res.json({
-                    message: 'User Info updated',
-                    data: user
-                });
-            });
+            
+            // Here we're using passwords for auth
+            bcrypt.compare(req.body.password_hash, user.password_hash, (error, isMatch) => {
+                if (error){
+                    // Send errors if there is any
+                    res.send(error);
+                }
+                if (isMatch) {
+                   // save the user and check for errors
+                    user.email = req.body.email ? req.body.email : user.email;
+                    user.firstname = req.body.firstname;
+                    user.lastname = req.body.lastname;
+                    user.save(function (err) {
+                        if (err)
+                            res.json(err);
+                            res.json({
+                            status: "success",
+                            message: 'User Info updated',
+                            data: user
+                        });
+                    });
+                } else {
+                  // response is OutgoingMessage object that server response http request
+                  return res.json({success: false, message: 'Passwords do not match'});
+                }
+            });     
         });
     } else {
         res.json('Not authorised');
