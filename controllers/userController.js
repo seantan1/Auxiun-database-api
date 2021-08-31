@@ -81,7 +81,7 @@ exports.update =  function (req, res) {
             bcrypt.compare(req.body.password_hash, user.password_hash, (error, isMatch) => {
                 if (error){
                     // Send errors if there is any
-                    res.send(error);
+                    return res.send(error);
                 }
                 if (isMatch) {
                    // save the user and check for errors
@@ -89,13 +89,17 @@ exports.update =  function (req, res) {
                     user.firstname = req.body.firstname;
                     user.lastname = req.body.lastname;
                     user.save(function (err) {
-                        if (err)
-                            res.json(err);
-                            res.json({
-                            status: "success",
-                            message: 'User Info updated',
-                            data: user
-                        });
+                        // If there is an error, return
+                        if (err){
+                            return res.json(err);
+                        } 
+                        else {
+                            return res.json({
+                                status: "success",
+                                message: 'User Info updated',
+                                data: user
+                            });
+                        }
                     });
                 } else {
                   // response is OutgoingMessage object that server response http request
