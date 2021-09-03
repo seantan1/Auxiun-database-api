@@ -74,34 +74,26 @@ exports.view = function (req, res) {
 exports.update =  function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         User.findById(req.params.user_id, function (err, user) {
-            if (err)
-                res.send(err);
-            
-            // Here we're using passwords for auth
-            bcrypt.compare(req.body.password_hash, user.password_hash, (error, isMatch) => {
-                if (error){
-                    // Send errors if there is any
-                    res.send(error);
-                }
-                if (isMatch) {
-                   // save the user and check for errors
-                    user.email = req.body.email ? req.body.email : user.email;
-                    user.firstname = req.body.firstname;
-                    user.lastname = req.body.lastname;
-                    user.save(function (err) {
-                        if (err)
-                            res.json(err);
-                            res.json({
-                            status: "success",
-                            message: 'User Info updated',
-                            data: user
-                        });
+            if (err){
+                return res.send(err);
+            }
+
+            // save the user and check for errors
+            user.firstname = req.body.firstname ? req.body.firstname : user.firstname;
+            user.lastname = req.body.lastname ? req.body.lastname : user.lastname;
+            user.save(function (err) {
+                // If there is an error, return
+                if (err){
+                    return res.json(err);
+                } 
+                else {
+                    return res.json({
+                        status: "success",
+                        message: 'User Info updated',
+                        data: user
                     });
-                } else {
-                  // response is OutgoingMessage object that server response http request
-                  return res.json({success: false, message: 'Passwords do not match'});
                 }
-            });     
+            });  
         });
     } else {
         res.json('Not authorised');
@@ -158,8 +150,9 @@ exports.updatePassword = async (req, res) => {
         if(passwordMatch){
             const newPasswordHash = await bcrypt.hash(req.body.new_password, saltRounds)
             const result = await user.update({password_hash: newPasswordHash})
+            const newUser = await User.findById(req.params.user_id)
             return res.json({ status: "success",
-                            data: result})
+                            data: newUser})
         } else {
             return res.json({
                 status: 'fail',
