@@ -77,7 +77,7 @@ exports.update = function (req, res) {
         nftMetadata.item_name = req.body.item_name;
         nftMetadata.item_description = req.body.item_description;
         nftMetadata.item_popularity = req.body.item_popularity;
-        nftMetadata.item_image = req.file.path;
+        
         // save the nftMetadata and check for errors
         nftMetadata.save(function (err) {
             if (err)
