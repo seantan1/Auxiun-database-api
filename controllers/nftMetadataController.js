@@ -183,7 +183,7 @@ exports.increaseNFTMetadataPopularity = function (req, res) {
         NftMetadata.findById(req.params.nftMetadata, function (err, nftMetadata) {
             if (err)
                 res.send(err);
-            nftMetadata.item_popularity = parseInt(req.body.item_popularity) + 1;
+            // nftMetadata.item_popularity = parseInt(req.body.item_popularity) + 1;
             // save the nftMetadata and check for errors
             nftMetadata.save(function (err) {
                 if (err)
