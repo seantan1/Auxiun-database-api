@@ -152,30 +152,30 @@ exports.fetchNFTMetadatasByGameId = function (req, res) {
 };
 
 // increase nftMetadata object popularity by 1
-exports.increaseNFTMetadataPopularity = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        NftMetadata.find()
-        .where('game_id_item_id_pair')
-        .equals(req.params.game_id + "_" + req.params.item_id)
-        .limit(1)
-        .exec(function (err, nftMetadata) {
-            if (err)
-                res.send(err);
-            nftMetadata.item_popularity = String(parseInt(nftMetadata.item_popularity) + 1);
-            // save the nftMetadata and check for errors
-            nftMetadata.save(function (err) {
-                if (err)
-                    res.json(err);
-                res.json({
-                    message: 'NFT Metadata popularity updated'
-                });
-            });
-        });
-    }
-    else {
-        res.json('Not authorised');
-    }
-};
+// exports.increaseNFTMetadataPopularity = function (req, res) {
+//     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+//         NftMetadata.find()
+//         .where('game_id_item_id_pair')
+//         .equals(req.params.game_id + "_" + req.params.item_id)
+//         .limit(1)
+//         .exec(function (err, nftMetadata) {
+//             if (err)
+//                 res.send(err);
+//             nftMetadata.item_popularity = String(parseInt(nftMetadata.item_popularity) + 1);
+//             // save the nftMetadata and check for errors
+//             nftMetadata.save(function (err) {
+//                 if (err)
+//                     res.json(err);
+//                 res.json({
+//                     message: 'NFT Metadata popularity updated'
+//                 });
+//             });
+//         });
+//     }
+//     else {
+//         res.json('Not authorised');
+//     }
+// };
 
 // Handle increase nftMetadata popularity
 exports.increaseNFTMetadataPopularity = function (req, res) {
