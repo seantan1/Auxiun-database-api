@@ -57,7 +57,7 @@ exports.new = function (req, res) {
 };
 // Handle view nftMetadata info
 exports.view = function (req, res) {
-    NftMetadata.findById(req.params.nftMetadata, function (err, nftMetadata) {
+    NftMetadata.findById(req.params.nftMetadata_id, function (err, nftMetadata) {
         if (err)
             res.send(err);
         res.json({
@@ -69,7 +69,7 @@ exports.view = function (req, res) {
 // Handle update nftMetadata info
 exports.update = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        NftMetadata.findById(req.params.nftMetadata, function (err, nftMetadata) {
+        NftMetadata.findById(req.params.nftMetadata_id, function (err, nftMetadata) {
             if (err)
                 res.send(err);
             nftMetadata.game_id_item_id_pair = req.body.game_id + "_" + req.body.item_id;
@@ -180,10 +180,10 @@ exports.fetchNFTMetadatasByGameId = function (req, res) {
 // Handle increase nftMetadata popularity
 exports.increaseNFTMetadataPopularity = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        NftMetadata.findById(req.params.nftMetadata, function (err, nftMetadata) {
+        NftMetadata.findById(req.params.nftMetadata_id, function (err, nftMetadata) {
             if (err)
                 res.send(err);
-            // nftMetadata.item_popularity = parseInt(req.body.item_popularity) + 1;
+            nftMetadata.item_popularity = parseInt(req.body.item_popularity) + 1;
             // save the nftMetadata and check for errors
             nftMetadata.save(function (err) {
                 if (err)
