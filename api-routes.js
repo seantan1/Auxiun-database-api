@@ -48,6 +48,13 @@ router.route('/users/:user_id')
 
 router.route('/users/update-password/:user_id')
     .patch(userController.updatePassword)
+    .put(userController.updatePassword)
+
+
+router.route('/forgot-password/:userId')
+    .patch(userController.forgotPassword)
+    .put(userController.forgotPassword)
+
 
 // streamer login
 router.route('/user-login')
@@ -98,6 +105,7 @@ router.route('/nftMetadatas-fetchByGameId/:game_id')
 router.route('/nftMetadata-increase-popularity/:nftMetadata_id')
     .put(nftMetadataController.increaseNFTMetadataPopularity)
     .patch(nftMetadataController.increaseNFTMetadataPopularity);
+
 
 // router.route('/purchase/:tokenId')
 // .post(transactionController.new);

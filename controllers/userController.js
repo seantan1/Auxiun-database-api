@@ -165,3 +165,13 @@ exports.updatePassword = async (req, res) => {
 }
 
 
+exports.forgotPassword = async (req, res) => {
+    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
+        const user = await User.findById(req.params.user_id)
+        const userEmail = user.email
+        // send user email
+    } else {
+        return res.json('Not authorised');
+    }
+}
+
