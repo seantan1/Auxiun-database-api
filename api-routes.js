@@ -6,7 +6,7 @@ var multer = require('multer');
 
 // function to upload image files
 var multer = require('multer');
- 
+
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads')
@@ -15,7 +15,7 @@ var storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now())
     }
 });
- 
+
 var upload = multer({ storage: storage });
 
 // Set default API response
@@ -95,7 +95,10 @@ router.route('/nft/:game_id/:item_id')
 router.route('/nftMetadatas-fetchByGameId/:game_id')
     .get(nftMetadataController.fetchNFTMetadatasByGameId);
 
+router.route('/nftMetadata-increase-popularity/:game_id/:item_id')
+    .get(nftMetadataController.increaseNFTMetadataPopularity);
+
 router.route('/purchase/:tokenId')
-    // .post(transactionController.new);
+// .post(transactionController.new);
 // Export API routes
 module.exports = router;
