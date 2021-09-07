@@ -6,3 +6,4 @@ package-lock.json
 
 # github script (because I can't be bothered entering my creds everytime I push)
 push.sh
+git_password.sh
