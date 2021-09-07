@@ -156,6 +156,7 @@ exports.increaseNFTMetadataPopularity = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         NftMetadata.find()
         .where('game_id_item_id_pair')
+        .limit(1)
         .equals(req.params.game_id + "_" + req.params.item_id, function (err, nftMetadata) {
             if (err)
                 res.send(err);
