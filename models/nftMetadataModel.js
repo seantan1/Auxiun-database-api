@@ -27,7 +27,7 @@ var nftMetadataSchema = mongoose.Schema({
         required: true
     },
     item_popularity: {
-        type: mongoose.Types.Decimal128
+        type: String
     },
     item_image: {
         data: Buffer,
