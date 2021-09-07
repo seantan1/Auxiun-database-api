@@ -4,3 +4,5 @@ package-lock.json
 .env
 *.env
 
+# github script (because I can't be bothered entering my creds everytime I push)
+push.sh
