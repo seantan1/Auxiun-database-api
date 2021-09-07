@@ -96,7 +96,7 @@ router.route('/nftMetadatas-fetchByGameId/:game_id')
     .get(nftMetadataController.fetchNFTMetadatasByGameId);
 
 router.route('/nftMetadata-increase-popularity/:game_id/:item_id')
-    .post(nftMetadataController.increaseNFTMetadataPopularity);
+    .patch(nftMetadataController.increaseNFTMetadataPopularity);
 
 router.route('/purchase/:tokenId')
 // .post(transactionController.new);
