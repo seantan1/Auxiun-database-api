@@ -34,6 +34,7 @@ exports.new = function (req, res) {
         nftMetadata.item_id = req.body.item_id;
         nftMetadata.item_name = req.body.item_name;
         nftMetadata.item_description = req.body.item_description;
+        nftMetadata.item_popularity = 0;
         nftMetadata.item_image = {
             data: fs.readFileSync(path.join(__dirname + '/../uploads/' + req.file.filename)),
             contentType: 'image/png'
@@ -76,6 +77,7 @@ exports.update = function (req, res) {
             nftMetadata.item_id = req.body.item_id;
             nftMetadata.item_name = req.body.item_name;
             nftMetadata.item_description = req.body.item_description;
+            nftMetadata.item_popularity = req.body.item_popularity;
             nftMetadata.item_image = req.file.path;
             // save the nftMetadata and check for errors
             nftMetadata.save(function (err) {
@@ -147,4 +149,28 @@ exports.fetchNFTMetadatasByGameId = function (req, res) {
                 res.json(nftMetadata);
             }
         })
+};
+
+// increase nftMetadata object popularity by 1
+exports.increaseNFTMetadataPopularity = function (req, res) {
+    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+        NftMetadata.find()
+        .where('game_id_item_id_pair')
+        .equals(req.params.game_id + "_" + req.params.item_id, function (err, nftMetadata) {
+            if (err)
+                res.send(err);
+            nftMetadata.item_popularity++;
+            // save the nftMetadata and check for errors
+            nftMetadata.save(function (err) {
+                if (err)
+                    res.json(err);
+                res.json({
+                    message: 'NFT Metadata popularity updated'
+                });
+            });
+        });
+    }
+    else {
+        res.json('Not authorised');
+    }
 };
