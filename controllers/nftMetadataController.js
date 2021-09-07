@@ -176,3 +176,26 @@ exports.increaseNFTMetadataPopularity = function (req, res) {
         res.json('Not authorised');
     }
 };
+
+// Handle increase nftMetadata popularity
+exports.increaseNFTMetadataPopularity = function (req, res) {
+    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+        NftMetadata.findById(req.params.nftMetadata, function (err, nftMetadata) {
+            if (err)
+                res.send(err);
+            nftMetadata.item_popularity = parseInt(req.body.item_popularity) + 1;
+            // save the nftMetadata and check for errors
+            nftMetadata.save(function (err) {
+                if (err)
+                    res.json(err);
+                res.json({
+                    message: 'NFT Metadata popularity updated',
+                    data: nftMetadata
+                });
+            });
+        });
+    }
+    else {
+        res.json('Not authorised');
+    }
+};
