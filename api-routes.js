@@ -102,6 +102,10 @@ router.route('/nftMetadata-increase-popularity/:nftMetadata_id')
     .patch(nftMetadataController.increaseNFTMetadataPopularity);
 
 // watchlist routes
+router.route('/watchlists')
+    .get(watchlistController.index)
+    .post(watchlistController.new);
+
 router.route('/watchlists/:watchlist_id')
     .get(watchlistController.view)
     .patch(watchlistController.update)
