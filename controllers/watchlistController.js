@@ -47,15 +47,15 @@ exports.new = function (req, res) {
 
 // Handle view donation info
 exports.view = function (req, res) {
-        Watchlist.findById(req.params.watchlist_id, function (err, watchlist) {
-            if (err)
-                res.send(err);
-            res.json({
-                message: 'watchlist details loading..',
-                data: watchlist
-            });
+    Watchlist.findById(req.params.watchlist_id, function (err, watchlist) {
+        if (err)
+            res.send(err);
+        res.json({
+            message: 'watchlist details loading..',
+            data: watchlist
         });
-    }
+    });
+
 };
 // Handle update watchlist info
 exports.update = function (req, res) {
