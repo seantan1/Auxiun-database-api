@@ -102,7 +102,7 @@ exports.delete = function (req, res) {
 // Handle fetch all watchlists by user_id
 exports.fetchWatchlistsByUserId = function (req, res) {
     Watchlist.find()
-        .where('user_id').equals(req.body.user_id)
+        .where('user_id').equals(req.params.user_id)
         .exec(function (err, watchlists) {
             if (err) {
                 res.json({
