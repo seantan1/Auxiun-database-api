@@ -27,7 +27,7 @@ exports.new = function (req, res) {
     if (req.body.apikey == process.env.PRIVATE_API_KEY) {
         var watchlist = new Watchlist();
         watchlist.user_id = req.body.user_id ? req.body.user_id : watchlist.user_id;
-        watchlist.game_id_item_id_pair = req.body.game_id_item_id_pair;
+        watchlist.nftMetadata_id = req.body.nftMetadata_id;
         // save the watchlist and check for errors
         watchlist.save(function (err) {
             // Check for validation error
@@ -64,7 +64,7 @@ exports.update = function (req, res) {
             if (err)
                 res.send(err);
             watchlist.user_id = req.body.user_id ? req.body.user_id : watchlist.user_id;
-            watchlist.game_id_item_id_pair = req.body.game_id_item_id_pair;
+            watchlist.nftMetadata_id = req.body.nftMetadata_id;
             // save the watchlist and check for errors
             watchlist.save(function (err) {
                 if (err)

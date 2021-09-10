@@ -7,7 +7,7 @@ var watchlistSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    game_id_item_id_pair: {
+    nftMetadata_id: {
         type: String,
         required: true,
     }
