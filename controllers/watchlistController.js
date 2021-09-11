@@ -82,21 +82,16 @@ exports.update = function (req, res) {
 };
 // Handle delete donation
 exports.delete = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
-        Watchlist.remove({
-            _id: req.params.watchlist_id
-        }, function (err, watchlist) {
-            if (err)
-                res.send(err);
-            res.json({
-                status: "success",
-                message: 'watchlist deleted'
-            });
+    Watchlist.remove({
+        _id: req.params.watchlist_id
+    }, function (err, watchlist) {
+        if (err)
+            res.send(err);
+        res.json({
+            status: "success",
+            message: 'watchlist deleted'
         });
-    }
-    else {
-        res.json('Not authorised');
-    }
+    });
 };
 
 // Handle fetch all watchlists by user_id
