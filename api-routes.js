@@ -34,6 +34,8 @@ var imageController = require('./controllers/imageController');
 var gameController = require('./controllers/gameController');
 // import nftMetadata controller
 var nftMetadataController = require('./controllers/nftMetadataController');
+// import watchlist controller
+var watchlistController = require('./controllers/watchlistController');
 
 // user routes
 router.route('/users')
@@ -98,6 +100,20 @@ router.route('/nftMetadatas-fetchByGameId/:game_id')
 router.route('/nftMetadata-increase-popularity/:nftMetadata_id')
     .put(nftMetadataController.increaseNFTMetadataPopularity)
     .patch(nftMetadataController.increaseNFTMetadataPopularity);
+
+// watchlist routes
+router.route('/watchlists')
+    .get(watchlistController.index)
+    .post(watchlistController.new);
+
+router.route('/watchlists/:watchlist_id')
+    .get(watchlistController.view)
+    .patch(watchlistController.update)
+    .put(watchlistController.update)
+    .delete(watchlistController.delete);
+
+router.route('/watchlists-fetchWatchlistsByUserId/:user_id')
+    .get(watchlistController.fetchWatchlistsByUserId)
 
 // router.route('/purchase/:tokenId')
 // .post(transactionController.new);
