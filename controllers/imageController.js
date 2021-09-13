@@ -3,7 +3,7 @@
 Image = require('../models/imageModel');
 // Handle index actions
 exports.index = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Image.get(function (err, images) {
             if (err) {
                 res.json({
@@ -24,7 +24,7 @@ exports.index = function (req, res) {
 };
 // Handle create image actions
 exports.new = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         var image = new Image();
         image.user_id = req.body.user_id ? req.body.user_id : image.user_id;
         image.image_link = req.body.image_link;
@@ -47,7 +47,7 @@ exports.new = function (req, res) {
 
 // Handle view donation info
 exports.view = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Image.findById(req.params.image_id, function (err, image) {
             if (err)
                 res.send(err);
@@ -63,7 +63,7 @@ exports.view = function (req, res) {
 };
 // Handle update image info
 exports.update = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Image.findById(req.params.image_id, function (err, image) {
             if (err)
                 res.send(err);
@@ -86,7 +86,7 @@ exports.update = function (req, res) {
 };
 // Handle delete donation
 exports.delete = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Image.remove({
             _id: req.params.image_id
         }, function (err, image) {
@@ -105,7 +105,7 @@ exports.delete = function (req, res) {
 
 // Handle fetch all images by user_id
 exports.fetchImagesByUserId = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Image.find()
         .where('user_id').equals(req.body.user_id)
         .exec(function (err, images) {

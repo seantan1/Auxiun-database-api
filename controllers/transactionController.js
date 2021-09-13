@@ -3,7 +3,7 @@
 Transaction = require('../models/transactionModel');
 // Handle index actions
 exports.index = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Transaction.get(function (err, transactions) {
             if (err) {
                 res.json({
@@ -25,7 +25,7 @@ exports.index = function (req, res) {
 
 // Log transaction
 exports.new = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         var transaction = new Transaction()
         transaction.transaction_id = req.body.transaction_id
         transaction.buyer = req.body.buyer

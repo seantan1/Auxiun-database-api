@@ -7,7 +7,7 @@ const saltRounds = 10
 User = require('../models/userModel');
 // Handle index actions
 exports.index = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         User.get(function (err, users) {
             if (err) {
                 res.json({
@@ -29,7 +29,7 @@ exports.index = function (req, res) {
 
 // Handle create user actions
 exports.new = async (req, res) => {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         var user = new User();
         user.email = req.body.email ? req.body.email : user.email;
         user.firstname = req.body.firstname;
@@ -54,7 +54,7 @@ exports.new = async (req, res) => {
 
 // Handle view user info
 exports.view = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         User.findById(req.params.user_id, function (err, user) {
             if (err)
                 res.send(err);
@@ -72,7 +72,7 @@ exports.view = function (req, res) {
 // Handle update user info
 // This function does not update the password for a user.
 exports.update =  function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         User.findById(req.params.user_id, function (err, user) {
             if (err){
                 return res.send(err);
@@ -103,7 +103,7 @@ exports.update =  function (req, res) {
 
 // Handle delete donation
 exports.delete = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         User.remove({
             _id: req.params.user_id
         }, function (err, user) {
@@ -121,7 +121,7 @@ exports.delete = function (req, res) {
 };
 
 exports.login = async (req, res) => {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if(req.headers.authorization == process.env.PRIVATE_API_KEY) {
         const user = await User.findOne({email: req.body.email})
         // Compare passwords
         if(!user){
@@ -143,7 +143,7 @@ exports.login = async (req, res) => {
 };
 
 exports.updatePassword = async (req, res) => {
-    if(req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if(req.headers.authorization == process.env.PRIVATE_API_KEY) {
         const user = await User.findById(req.params.user_id)
         // Compare passwords
         const passwordMatch = await bcrypt.compare(req.body.old_password, user.password_hash)
