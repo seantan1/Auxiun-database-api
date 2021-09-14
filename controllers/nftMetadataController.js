@@ -6,7 +6,7 @@ var path = require('path');
 
 // Handle index actions
 exports.index = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         NftMetadata.get(function (err, nftMetadatas) {
             if (err) {
                 res.json({
@@ -27,7 +27,7 @@ exports.index = function (req, res) {
 };
 // Handle create nftMetadata actions
 exports.new = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         var nftMetadata = new NftMetadata();
         nftMetadata.game_id_item_id_pair = req.body.game_id + "_" + req.body.item_id;
         nftMetadata.game_id = req.body.game_id;
@@ -91,7 +91,7 @@ exports.update = function (req, res) {
 };
 // Handle delete donation
 exports.delete = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         NftMetadata.remove({
             _id: req.params.nftMetadata_id
         }, function (err, nftMetadata) {
@@ -148,7 +148,7 @@ exports.fetchNFTMetadatasByGameId = function (req, res) {
 
 // Handle increase nftMetadata popularity
 exports.increaseNFTMetadataPopularity = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         NftMetadata.findById(req.params.nftMetadata_id, function (err, nftMetadata) {
             if (err)
                 res.send(err);
@@ -169,18 +169,23 @@ exports.increaseNFTMetadataPopularity = function (req, res) {
     }
 };
 exports.increaseNFTMetadataPopularity = function (req, res) {
-    NftMetadata.findById(req.params.nftMetadata_id, function (err, nftMetadata) {
-        if (err)
-            res.send(err);
-        nftMetadata.item_popularity = parseInt(nftMetadata.item_popularity) + 1;
-        // save the nftMetadata and check for errors
-        nftMetadata.save(function (err) {
+    if(req.headers.authorization == process.env.PRIVATE_API_KEY) {
+        NftMetadata.findById(req.params.nftMetadata_id, function (err, nftMetadata) {
             if (err)
-                res.json(err);
-            res.json({
-                message: 'NFT Metadata info updated',
-                data: nftMetadata
+                res.send(err);
+            nftMetadata.item_popularity = parseInt(nftMetadata.item_popularity) + 1;
+            // save the nftMetadata and check for errors
+            nftMetadata.save(function (err) {
+                if (err)
+                    res.json(err);
+                res.json({
+                    message: 'NFT Metadata info updated',
+                    data: nftMetadata
+                });
             });
         });
-    });
+    } else {
+        res.json('Not authorised');
+    }
+
 };

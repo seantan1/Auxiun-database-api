@@ -3,7 +3,7 @@
 Watchlist = require('../models/watchlistModel');
 // Handle index actions
 exports.index = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Watchlist.get(function (err, watchlists) {
             if (err) {
                 res.json({
@@ -24,7 +24,7 @@ exports.index = function (req, res) {
 };
 // Handle create watchlist actions
 exports.new = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         var watchlist = new Watchlist();
         watchlist.user_id = req.body.user_id ? req.body.user_id : watchlist.user_id;
         watchlist.nftMetadata_id = req.body.nftMetadata_id;
@@ -59,7 +59,7 @@ exports.view = function (req, res) {
 };
 // Handle update watchlist info
 exports.update = function (req, res) {
-    if (req.body.apikey == process.env.PRIVATE_API_KEY) {
+    if (req.headers.authorization == process.env.PRIVATE_API_KEY) {
         Watchlist.findById(req.params.watchlist_id, function (err, watchlist) {
             if (err)
                 res.send(err);
